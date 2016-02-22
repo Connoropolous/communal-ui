@@ -1,4 +1,4 @@
-module.exports = function ($resource, $state, Project, $timeout, $q) {
+module.exports = function ($resource, $state, $timeout, $q) {
   'ngInject'
 
   var User = $resource('/noo/user/:id', {
@@ -6,20 +6,6 @@ module.exports = function ($resource, $state, Project, $timeout, $q) {
   }, {
     current: {
       url: '/noo/user/me'
-    },
-    contributions: {
-      url: '/noo/user/:id/contributions',
-      isArray: true
-    },
-    thanks: {
-      url: '/noo/user/:id/thanks',
-      isArray: true
-    },
-    followedPosts: {
-      url: '/noo/user/:id/followed-posts'
-    },
-    allPosts: {
-      url: '/noo/user/:id/all-community-posts'
     },
     login: {
       url: '/noo/login',
@@ -67,26 +53,8 @@ module.exports = function ($resource, $state, Project, $timeout, $q) {
 
   // let's make things a bit more OO around here
   _.extend(User.prototype, {
-    contributions: function (params, success, error) {
-      return User.contributions(_.extend({id: this.id}, params), success, error)
-    },
-    thanks: function (params, success, error) {
-      return User.thanks(_.extend({id: this.id}, params), success, error)
-    },
     update: function (params, success, error) {
       return User.save(_.extend({id: this.id}, params), success, error)
-    },
-    posts: function (params, success, error) {
-      return User.posts(_.extend({id: this.id}, params), success, error)
-    },
-    followedPosts: function (params, success, error) {
-      return User.followedPosts(_.extend({id: this.id}, params), success, error)
-    },
-    allPosts: function (params, success, error) {
-      return User.allPosts(_.extend({id: this.id}, params), success, error)
-    },
-    projects: function (params, success, error) {
-      return Project.queryForUser(_.extend({id: this.id}, params), success, error)
     },
     firstName: function () {
       return this.name.split(' ')[0]

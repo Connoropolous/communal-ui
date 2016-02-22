@@ -12,9 +12,9 @@
         <h3>People</h3>
 
         <div class="person" ng-repeat="person in results.people track by person.id">
-          <a class="avatar" back-img="::person.avatar_url" ui-sref="profile.posts({id: person.id})"></a>
+          <a class="avatar" back-img="::person.avatar_url" ui-sref="profile.about({id: person.id})"></a>
           <div class="info">
-            <a class="name" bind-html-unsafe="name(person)" ui-sref="profile.posts({id: person.id})"></a>
+            <a class="name" bind-html-unsafe="name(person)" ui-sref="profile.about({id: person.id})"></a>
             <p class="blurb" bind-html-unsafe="blurb(person)"></p>
           </div>
         </div>
@@ -27,23 +27,6 @@
         </div>
 
       </div>
-
-      <div class="post-results">
-        <h3>Posts</h3>
-
-        <div ng-repeat="post in results.posts track by post.id">
-          <post-card post="post"></post-card>
-        </div>
-        <a ng-if="remaining('posts') > 0" ng-click="loadMore('posts')" class="load-more">
-          Show {{pageSize('posts')}} more (out of {{remaining('posts')}})
-        </a>
-
-        <div ng-if="!searching && results.posts.length == 0" class="no-results">
-          No posts matched your search.
-        </div>
-
-      </div>
     </div>
-
   </div>
 </div>

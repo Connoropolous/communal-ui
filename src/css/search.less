@@ -26,8 +26,6 @@ body.search {
   }
 
   .people {
-    .make-sm-column(4);
-    .make-sm-column-push(8);
 
     .avatar {
       .user-avatar-sm;
@@ -46,12 +44,7 @@ body.search {
 
   }
 
-  .post-results {
-    .make-sm-column(8);
-    .make-sm-column-pull(4);
-  }
-
-  .people, .post-results {
+  .people {
     @media (max-width: @screen-xs-max) {
       padding: 0;
     }

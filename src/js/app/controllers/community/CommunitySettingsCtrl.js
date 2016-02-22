@@ -1,30 +1,50 @@
 var filepickerUpload = require('../../services/filepickerUpload');
 
-var controller = function ($scope, $history, $analytics, community, currentUser, growl, extraProperties, User, $location) {
+var controller = function ($scope, $history, $analytics, community, currentUser, growl, tools, extraProperties, User, UseOfTool, $location) {
 
   _.merge(community, extraProperties);
   var origin = $location.absUrl().replace($location.path(), '');
   $scope.join_url = origin + '/c/' + community.slug + '/join/' + community.beta_access_code;
-  $scope.add_slack_url = origin + '/noo/community/' + community.id + '/settings/slack';
   $scope.community = community;
   $scope.settings = community.settings;
+  $scope.tools = tools.tools;
+  $scope.availableTools = tools.available_tools.filter(function (t) {
+    return !_.find(tools.tools, function (inner) { return parseInt(inner.tool_id) === t.id; });
+  })
 
-  if ($location.$$search.slack === "1") {
-    growl.addSuccessMessage('Success connecting to Slack.');
-  } else if ($location.$$search.slack === "0") {
-    growl.addErrorMessage('There was an error connecting to Slack. Please try again.');
+  if ($location.$$search.tools === "1") {
+    $scope.expand4 = true;
   }
+  if ($location.$$search.new === "1") {
+    $scope.new = true;
+  }
+
+  $scope.toolDisplayUrl = UseOfTool.toolDisplayUrl;
 
   $scope.close = function() {
     if ($history.isEmpty()) {
-      $scope.$state.go('community.posts', {community: community.slug});
+      $scope.$state.go('community.members', {community: community.slug});
     } else {
       $history.back();
     }
   };
 
-  $scope.editing = {};
-  $scope.edited = {};
+  $scope.removeSlug = function (string) {
+    return string.replace(':slug', '');
+  }
+
+  $scope.editing = {
+    tools: $scope.tools.map(() => { return false; }),
+    addTools: $scope.availableTools.map(() => { return false; })
+  };
+  $scope.edited = {
+    tools: _.clone($scope.tools),
+    addTools: $scope.availableTools.map(function (availableTool) {
+      return { tool_id: availableTool.id, community_id: community.id, slug: "" };
+    })
+  };
+
+  console.log($scope.edited.addTools);
 
   $scope.edit = function(field, field2) {
     $scope.edited[field] = community[field];
@@ -92,23 +112,22 @@ var controller = function ($scope, $history, $analytics, community, currentUser,
           if (error.code == 101) return;
 
           growl.addErrorMessage('An error occurred while uploading the image. Please try again.');
-          $analytics.eventTrack('Community: Failed to Change ' + opts.humanName, {
-            community_id: community.slug,
-            moderator_id: currentUser.id
-          });
         }
       });
     };
   };
 
   $scope.changeIcon = imageChangeFn(community.avatarUploadSettings());
-  $scope.changeBanner = imageChangeFn(community.bannerUploadSettings());
 
   $scope.toggleModerators = function() {
     $scope.expand3 = !$scope.expand3;
     if (!$scope.moderators) {
       $scope.moderators = community.moderators();
     }
+  };
+
+  $scope.toggleTools = function() {
+    $scope.expand4 = !$scope.expand4;
   };
 
   $scope.saveSetting = function(name) {
@@ -147,26 +166,69 @@ var controller = function ($scope, $history, $analytics, community, currentUser,
     })
   };
 
+  $scope.removeTool = function(index) {
+    var tool = $scope.tools[index],
+      confirmText = "Are you sure you wish to remove the tool " + tool.tool.name + "?";
+
+    if (confirm(confirmText)) {
+      community.removeTool({id: tool.id}, function() {
+        $scope.availableTools.push(tool.tool);
+        $scope.tools = $scope.tools.filter(function(innerTool) {
+          return innerTool.id != tool.id;
+        });
+      });
+    }
+  };
+
   $scope.setLeader = function(item) {
     $scope.edited.leader = item;
   };
 
-  $scope.removeSlackhook = function() {
-    $scope.slack_configure = community.slack_configure;
-    community.update({slack_hook: "", slack_team: "", slack_configure: ""}, function() {
-      community.slack_hook = "";
-      community.slack_team = "";
-      community.slack_configure = "";
-      $scope.slack_remove_transition = true;
+  $scope.editTool = function(index) {
+    $scope.edited.tools[index] = _.clone($scope.tools[index]);
+    $scope.editing.tools[index] = true;
+  };
+
+  $scope.cancelToolEdit = function(index) {
+    $scope.editing.tools[index] = false;
+  };
+
+  $scope.saveToolEdit = function(index) {
+    $scope.editing.tools[index] = false;
+    var data = {
+      id: $scope.edited.tools[index].id,
+      slug: $scope.edited.tools[index].slug
+    };
+    community.updateTool(data, function() {
+      $scope.tools[index] = $scope.edited.tools[index];
     });
   };
 
-  $scope.removeFromSlack = function() {
-    $scope.slack_remove_transition = false;
-    var win = window.open($scope.slack_configure, '_blank');
-    win.focus();
-    $scope.slack_configure = null;
-  }
+  $scope.startAddTool = function(index) {
+    $scope.editing.addTools[index] = true;
+  };
+
+  $scope.cancelAddTool = function(index) {
+    $scope.editing.addTools[index] = false;
+  };
+
+  $scope.finishAddTool = function(index) {
+    $scope.editing.addTools[index] = false;
+    var data = {
+      tool_id: $scope.edited.addTools[index].tool_id,
+      slug: $scope.edited.addTools[index].slug
+    };
+    community.addTool(data, function() {
+      $scope.tools.push({
+        slug: data.slug,
+        tool_id: data.tool_id,
+        community_id: $scope.edited.addTools[index].community_id,
+        tool: _.clone($scope.availableTools[index])
+      });
+      $scope.edited.addTools.splice(index, 1);
+      $scope.availableTools.splice(index, 1);
+    });
+  };
 };
 
 module.exports = function(angularModule) {

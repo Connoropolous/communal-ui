@@ -6,14 +6,9 @@ var controller = function($scope, $analytics, community, currentUser, extraPrope
   var origin = $location.absUrl().replace($location.path(), '')
   $scope.join_url = origin + '/c/' + community.slug + '/join/' + community.beta_access_code
 
-  $scope.invitationSubject = format("Join %s on Hylo", community.name)
+  $scope.invitationSubject = format("Join %s on Communal", community.name)
 
-  $scope.invitationText = format("%s is using Hylo, a new kind of social network " +
-    "that's designed to help communities and organizations create things together.\n\n" +
-    "We're surrounded by incredible people, skills, and resources. But it can be hard to know whom " +
-    "to connect with, for what, and when. Often the things we need most are closer than we think.\n\n" +
-    "Hylo makes it easy to discover the abundant skills, resources, and opportunities in your communities " +
-    "that might otherwise go unnoticed. Together, we can create whatever we can imagine.",
+  $scope.invitationText = format("%s is using Communal",
     community.name);
 
   $scope.invite = function() {

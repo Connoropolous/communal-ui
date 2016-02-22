@@ -1,22 +1,7 @@
 var filepickerUpload = require('../../services/filepickerUpload');
 
-var categories = {
-  'coworking': 'Co-working space',
-  'makerspace': 'Maker space',
-  'startupAccelerator': 'Startup accelerator',
-  'communityCenter': 'Community center',
-  'localAffinityNetwork': 'Local affinity network',
-  'distributedAffinityNetwork': 'Distributed affinity network',
-  'event': 'Special event',
-  'neighborhood': 'Neighborhood',
-  'alumniCommunity': 'Alumni community',
-  'organization': 'Organization',
-  'other': 'Other'
-};
-
 var controller = function ($scope, $timeout, $analytics, $history, Community, growl, currentUser) {
 
-  $scope.categories = categories;
   $scope.uploading = {};
 
   var community = $scope.community = new Community({
@@ -55,7 +40,6 @@ var controller = function ($scope, $timeout, $analytics, $history, Community, gr
   };
 
   $scope.changeIcon = imageChangeFn(community.avatarUploadSettings());
-  $scope.changeBanner = imageChangeFn(community.bannerUploadSettings());
 
   $scope.close = function () {
     if ($history.isEmpty()) {
@@ -84,7 +68,7 @@ var controller = function ($scope, $timeout, $analytics, $history, Community, gr
       $analytics.eventTrack('Create Community: Finished', {community_id: community.slug});
       currentUser.memberships = [membership].concat(currentUser.memberships);
       $scope.saving = false;
-      $scope.$state.go("community.posts", {community: community.slug});
+      $scope.$state.go("community.settings", {community: community.slug, tools: 1, new: 1});
     });
   };
 

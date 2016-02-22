@@ -19,45 +19,6 @@ module.exports = function ($stateProvider) {
       }
     }
   })
-  .state('network.posts', {
-    url: '',
-    resolve: {
-      firstPostQuery: /* @ngInject*/ function (network, Post) {
-        return Post.queryForNetwork({id: network.id, limit: 10, type: 'all'}).$promise
-      }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/network/posts.tpl.html',
-        controller: function ($scope, network, firstPostQuery, PostManager, Post) {
-          'ngInject'
-
-          var postManager = new PostManager({
-            firstPage: firstPostQuery,
-            scope: $scope,
-            attr: 'posts',
-            hideWelcomePosts: true,
-            query: function () {
-              return Post.queryForNetwork({
-                id: network.id,
-                limit: 10,
-                offset: $scope.posts.length,
-                type: $scope.selected.filter.value,
-                sort: $scope.selected.sort.value
-              }).$promise
-            }
-          })
-
-          postManager.setup()
-
-          $scope.updateView = function (data) {
-            $scope.selected = data
-            postManager.reload()
-          }
-        }
-      }
-    }
-  })
   .state('network.communities', {
     url: '/communities',
     resolve: {

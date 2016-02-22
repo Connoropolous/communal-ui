@@ -5,7 +5,6 @@ var app = angular.module('hyloAdmin', ['ngResource', 'ui.router'])
 var Chart = require('./services/Chart')
 
 require('../app/services/Community')(app)
-require('../app/services/Project')(app)
 require('../app/directives/masonry')(app)
 require('../app/filters')(app)
 

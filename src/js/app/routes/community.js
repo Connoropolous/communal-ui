@@ -48,64 +48,7 @@ module.exports = function ($stateProvider) {
       }
     }
   })
-
-  .state('community.posts', {
-    url: '',
-    parent: 'community.home',
-    views: {
-      tab: {
-        templateUrl: '/ui/community/posts.tpl.html',
-        controller: 'CommunityPostsCtrl'
-      }
-    },
-    resolve: /* @ngInject*/ {
-      firstPostQuery: function (community, Post, Cache) {
-        var key = 'community.posts:' + community.id
-        var cached = Cache.get(key)
-
-        if (cached) {
-          return cached
-        } else {
-          return Post.queryForCommunity({
-            communityId: community.id,
-            limit: 10,
-            type: 'all+welcome'
-          }).$promise.then(function (resp) {
-            Cache.set(key, resp, {maxAge: 10 * 60})
-            return resp
-          })
-        }
-      },
-      showModal: function (onboarding) {
-        // hack -- this is only here so it shows before the controller's other content appears
-        if (onboarding && onboarding.currentStep() === 'community') {
-          onboarding.showCommunityModal()
-        }
-      }
-    }
-  })
-  .state('community.events', {
-    url: '/events',
-    parent: 'community.home',
-    resolve: /* @ngInject*/ {
-      firstPostQuery: function (community, Post) {
-        return Post.queryForCommunity({
-          communityId: community.id,
-          limit: 10,
-          type: 'event',
-          sort: 'start_time',
-          filter: 'future'
-        }).$promise
-      }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/community/events.tpl.html',
-        controller: 'CommunityEventsCtrl'
-      }
-    }
-  })
-  .state('community.about', {
+ .state('community.about', {
     url: '/about',
     parent: 'community.home',
     views: {
@@ -140,20 +83,27 @@ module.exports = function ($stateProvider) {
       }
     }
   })
-  .state('community.projects', {
-    url: '/projects',
+  .state('community.tools', {
+    url: '/tools',
     parent: 'community.home',
-    resolve: {
-      projects: /* @ngInject*/ function (community) {
-        return community.projects().$promise
-      }
-    },
     views: {
       tab: {
-        templateUrl: '/ui/community/projects.tpl.html',
-        controller: function ($scope, projects) {
-          'ngInject'
-          $scope.projects = projects
+        templateUrl: '/ui/community/tools.tpl.html',
+        controller: 'CommunityToolsCtrl'
+      }
+    },
+    resolve: /* @ngInject*/ {
+      toolsQuery: function (community, Cache) {
+        var key = 'community.tools:' + community.id
+        var cached = Cache.get(key)
+
+        if (cached) {
+          return cached
+        } else {
+          return community.tools().$promise.then(function (resp) {
+            Cache.set(key, resp, {maxAge: 10 * 60})
+            return resp
+          })
         }
       }
     }
@@ -174,10 +124,13 @@ module.exports = function ($stateProvider) {
     }
   })
   .state('community.settings', {
-    url: '/settings',
+    url: '/settings?tools&new',
     resolve: {
       extraProperties: /* @ngInject*/ function (community) {
         return community.getSettings().$promise
+      },
+      tools: /* @ngInject*/ function (community) {
+        return community.tools().$promise
       }
     },
     views: {

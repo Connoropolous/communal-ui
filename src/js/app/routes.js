@@ -6,14 +6,6 @@ var routes = function ($stateProvider, $urlRouterProvider) {
     return $location.path()
   })
 
-  // handle old links
-  $urlRouterProvider.when('/c/:community/s/:postId', '/p/:postId')
-  $urlRouterProvider.when('/community/invite/:token', '/use-invitation?token')
-  $urlRouterProvider.when('/h/login', '/login')
-  $urlRouterProvider.when('/h/signup', '/signup')
-  $urlRouterProvider.when('/h/forgot-password', '/forgot-password')
-  $urlRouterProvider.when('/h/search', '/search')
-
   // handle alternate name of starting route
   $urlRouterProvider.when('/', '/app')
 
@@ -92,48 +84,11 @@ var routes = function ($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  .state('post', {
-    url: '/p/:postId?action',
-    parent: 'main',
-    views: {
-      main: {
-        templateUrl: '/ui/post/show.tpl.html',
-        controller: 'PostCtrl'
-      }
-    },
-    resolve: {
-      post: /* @ngInject*/ function (Post, $stateParams) {
-        return Post.get({id: $stateParams.postId}).$promise
-      }
-    },
-    data: {
-      singlePost: true
-    }
-  })
-  .state('editPost', {
-    url: '/p/:postId/edit',
-    parent: 'main',
-    views: {
-      main: {
-        templateUrl: '/ui/post/edit-page.tpl.html',
-        controller: 'PostEditPageCtrl'
-      }
-    },
-    resolve: /* @ngInject*/ {
-      post: function (Post, $stateParams) {
-        return Post.get({id: $stateParams.postId}).$promise
-      },
-      communities: function (post) {
-        return post.communities
-      }
-    }
-  })
-
+  
   require('./routes/community')($stateProvider)
   require('./routes/profile')($stateProvider)
   require('./routes/onboarding')($stateProvider)
   require('./routes/home')($stateProvider)
-  require('./routes/project')($stateProvider)
   require('./routes/network')($stateProvider)
   require('./routes/entrance')($stateProvider)
 }

@@ -41,12 +41,6 @@ body.community {
 
 }
 
-.community-posts {
-  .post-context .community {
-    display: none;
-  }
-}
-
 .community-members {
 
   .toolbar {
@@ -64,16 +58,21 @@ body.community {
 
 }
 
-.community-projects {
-  .tab-content > div {
-    .make-sm-column(6);
-    .make-sm-column-offset(3);
-    padding-top: @std-padding;
+.community-tools {
 
-    .add-new {
-      margin-bottom: @std-padding;
+  .toolbar {
+    margin-bottom: @std-padding;
+
+    .invite, .search {
+      .rounded-button;
     }
   }
+
+  .tool-list, .toolbar > div {
+    .make-sm-column(6);
+    .make-sm-column-offset(3);
+  }
+
 }
 
 .community-about-toolbar {
@@ -97,6 +96,45 @@ body.community {
   .make-sm-column(6);
   .make-sm-column-offset(3);
   .body-text;
+}
+
+.tool-list-item {
+  .avatar {
+    .user-avatar;
+    position: absolute;
+    @media (max-width: @screen-xs-max) {
+      .user-avatar-sm;
+    }
+  }
+
+  button {
+    .rounded-button;
+
+    &.main-action {
+      .rounded-button-dark;
+    }
+  }
+
+  .tool-info {
+    min-height: @avatar-size-default + @std-padding;
+    margin-left: @avatar-size-default + @std-padding;
+    margin-bottom: @std-padding;
+    padding-bottom: @std-padding;
+    border-bottom: 1px solid @border-light;
+    .name {
+      .medium-header;
+      .remove-link-display;
+      padding-right: @std-padding;
+    }
+    @media (max-width: @screen-xs-max) {
+      margin-left: @avatar-size-sm + @std-padding;
+      margin-right: 5px;
+      .name {
+        .title-text;
+        font-size: 22px;
+      }
+    }
+  }
 }
 
 .user-list-item {

@@ -77,15 +77,33 @@ body.home-allPosts {
   }
 }
 
-.home-myPosts {
-  .tab-content {
-    .post {
-      .post-without-avatar;
+body.home-simple {
+  .communities {
+    .community {
+      margin-left: -15px;
+      margin-right: -15px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      .make-row;
+    }
+    a {
+      font-size: 15px;
+    }
+    .main-column {
+      .make-sm-column(8);
+      button {
+        margin-top: @std-padding/2;
+      }
+    }
+    .side-column {
+      .make-sm-column(4);
+
+      @media (min-width: @screen-sm) {
+        text-align: right;
+      }
     }
   }
-}
 
-body.home-simple {
   .tab-content-wrapper {
     .make-sm-column(6);
     .make-sm-column-offset(3);

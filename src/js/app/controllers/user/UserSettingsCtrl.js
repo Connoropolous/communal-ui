@@ -1,15 +1,11 @@
-module.exports = function ($scope, growl, $stateParams, $analytics, currentUser, Community, $history, $dialog, UserCache, joinCommunity) {
+module.exports = function ($scope, growl, $stateParams, $analytics, currentUser, $history, $dialog) {
   'ngInject'
   var user = $scope.user = currentUser
   var editing = $scope.editing = {}
   var edited = $scope.edited = {}
 
-  if (!user.settings.digest_frequency) {
-    user.settings.digest_frequency = 'daily'
-  }
-
-  $analytics.eventTrack('User Settings: Viewed')
-
+  $scope.expand1 = true
+  
   if ($stateParams.expand === 'password') {
     $scope.expand1 = true
     editing.password = true
@@ -21,7 +17,7 @@ module.exports = function ($scope, growl, $stateParams, $analytics, currentUser,
 
   $scope.close = function () {
     if ($history.isEmpty()) {
-      $scope.$state.go('profile.posts', {id: user.id})
+      $scope.$state.go('profile.about', {id: user.id})
     } else {
       $history.go(-1)
     }
@@ -67,16 +63,4 @@ module.exports = function ($scope, growl, $stateParams, $analytics, currentUser,
     })
   }
 
-  $scope.leaveCommunity = function (communityId, index) {
-    $dialog.confirm({
-      message: 'Are you sure you want to leave this community?'
-    }).then(function () {
-      Community.leave({id: communityId}, function () {
-        user.memberships.splice(index, 1)
-        UserCache.allPosts.clear(currentUser.id)
-      })
-    })
-  }
-
-  $scope.joinCommunity = joinCommunity
 }

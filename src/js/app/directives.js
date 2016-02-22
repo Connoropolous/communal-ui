@@ -3,18 +3,11 @@ var angularModule = angular.module('hyloDirectives', ['ngResource'])
 require('./directives/contenteditable')(angularModule)
 require('./directives/socialMedia')(angularModule)
 require('./directives/seeMore')(angularModule)
-require('./directives/embeddedComments')(angularModule)
 require('./directives/masonry')(angularModule)
 require('./directives/anguvideo')(angularModule)
 require('./directives/touchClass')(angularModule)
-require('./directives/postCard')(angularModule)
-require('./directives/welcomePost')(angularModule)
 
 angularModule
-.directive('postEditor', require('./directives/postEditor'))
-.directive('inlinePostInput', require('./directives/inlinePostInput'))
-.directive('postsToolbar', require('./directives/postsToolbar'))
-
 .directive('responsiveDropdownMenu', function () {
   var margin = 15
 

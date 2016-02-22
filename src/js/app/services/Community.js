@@ -1,4 +1,4 @@
-var service = function($resource, Project) {
+var service = function($resource) {
   var Community = $resource('/noo/community/:id', {
     id: '@id'
   }, {
@@ -8,6 +8,9 @@ var service = function($resource, Project) {
     },
     findMembers: {
       url: '/noo/community/:id/members'
+    },
+    findTools: {
+      url: '/noo/community/:id/tools'
     },
     findModerators: {
       url: '/noo/community/:id/moderators',
@@ -23,6 +26,22 @@ var service = function($resource, Project) {
     },
     removeMember: {
       url: '/noo/community/:id/member/:userId',
+      method: 'DELETE'
+    },
+    addTool: {
+      url: '/noo/community/:id/tools',
+      method: 'POST'
+    },
+    getTool: {
+      url: '/noo/community/:id/tools/:useId',
+      method: 'GET'
+    },
+    updateTool: {
+      url: '/noo/community/:id/tools/:useId',
+      method: 'POST'
+    },
+    removeTool: {
+      url: '/noo/community/:id/tools/:useId',
       method: 'DELETE'
     },
     leave: {
@@ -51,6 +70,9 @@ var service = function($resource, Project) {
     members: function(params, success, error) {
       return Community.findMembers(_.extend({id: this.id}, params), success, error);
     },
+    tools: function(params, success, error) {
+      return Community.findTools(_.extend({id: this.id}, params), success, error);
+    },
     getSettings: function(success, error) {
       return Community.getSettings({id: this.id}, success, error);
     },
@@ -63,6 +85,18 @@ var service = function($resource, Project) {
     removeModerator: function(params, success, error) {
       return Community.removeModerator(_.extend({id: this.id}, params), success, error);
     },
+    addTool: function(params, success, error) {
+      return Community.addTool(_.extend({id: this.id}, params), success, error);
+    },
+    getTool: function(params, success, error) {
+      return Community.getTool(_.extend({id: this.id}, params), success, error);
+    },
+    updateTool: function(params, success, error) {
+      return Community.updateTool({id: this.id, useId: params.id}, _.pick(params, ['slug']), success, error);
+    },
+    removeTool: function(params, success, error) {
+      return Community.removeTool({id: this.id, useId: params.id}, success, error);
+    },
     update: function(params, success, error) {
       return Community.save(_.extend({id: this.id}, params), success, error);
     },
@@ -72,9 +106,6 @@ var service = function($resource, Project) {
     removeMember: function(params, success, error) {
       return Community.removeMember(_.extend({id: this.id}, params), success, error);
     },
-    projects: function(params, success, error) {
-      return Project.queryForCommunity(_.extend({id: this.id}, params), success, error);
-    },
     avatarUploadSettings: function() {
       return {
         fieldName: 'avatar_url',
@@ -83,14 +114,6 @@ var service = function($resource, Project) {
         convert: {width: 160, height: 160, fit: 'crop', rotate: "exif"}
       }
     },
-    bannerUploadSettings: function() {
-      return {
-        fieldName: 'banner_url',
-        humanName: 'Banner',
-        path: format('community/%s/banner', this.id || 'new'),
-        convert: {width: 1600, format: 'jpg', fit: 'max', rotate: "exif"}
-      };
-    }
   });
 
   return Community;

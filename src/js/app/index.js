@@ -1,6 +1,3 @@
-var connectWebViewJavascriptBridge = require('./services/webViewJavascriptBridge')
-var isiOSApp = require('./services/isIOSApp')
-var isAndroidApp = require('./services/isAndroidApp')
 var branch = require('branch-sdk')
 
 require('./directives')
@@ -80,30 +77,11 @@ app.run(function ($rootScope, $state, growl, $bodyClass, CurrentUser) {
   $rootScope.$bodyClass = $bodyClass
 
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams, error) {
-    if (typeof AndroidBridge !== 'undefined') {
-      var payload = {message: 'stateChanged', toState: toState.name}
-      AndroidBridge.send(JSON.stringify(payload))
-    } else if (isiOSApp()) {
-      if (fromState.name === '') {
-        connectWebViewJavascriptBridge(function (bridge) {
-          bridge.init(function (message, responseCallback) {
-            // currently does not do anything with messages from app
-          })
-
-          var payload = {message: 'loaded'}
-          bridge.send(JSON.stringify(payload))
-        })
-      }
-
-      connectWebViewJavascriptBridge(function (bridge) {
-        var payload = {message: 'stateChanged', toState: toState.name}
-        bridge.send(JSON.stringify(payload))
-      })
-    }
+  
   })
 
   $rootScope.$on('$viewContentLoaded', function () {
-    if (!isiOSApp() && !isAndroidApp() && window.hyloEnv.branch.key) {
+    if (window.hyloEnv.branch.key) {
       try {
         branch.init(window.hyloEnv.branch.key)
         branch.banner(

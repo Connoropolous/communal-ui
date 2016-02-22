@@ -11,7 +11,7 @@ module.exports = function($stateProvider) {
           if (onboarding && onboarding.currentStep() == 'start') {
             $state.go('onboarding.start');
           } else {
-            $state.go('community.posts', {community: membership.community.slug});
+            $state.go('community.members', {community: membership.community.slug});
           }
         } else if (currentUser) {
           $state.go('home.simple');
@@ -30,7 +30,6 @@ module.exports = function($stateProvider) {
         });
       },
       context: function() { return 'normal' },
-      projectInvitation: function() { return null }
     },
     onEnter: function(loggedIn, $timeout, $state) {
       if (loggedIn) {

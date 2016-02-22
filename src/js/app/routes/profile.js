@@ -42,48 +42,6 @@ module.exports = function ($stateProvider) {
       }
     }
   })
-  .state('profile.posts', {
-    url: '',
-    resolve: /*@ngInject*/ {
-      firstPostQuery: function(Post, UserCache, user) {
-        return UserCache.posts.fetch(user.id);
-      }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/post/list.tpl.html',
-        controller: 'PostListCtrl'
-      }
-    }
-  })
-  .state('profile.contributions', {
-    url: '/contributions',
-    resolve: {
-      contributions: ['user', function(user) {
-        return user.contributions().$promise;
-      }]
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/profile/contributions.tpl.html',
-        controller: 'ProfileContributionsCtrl'
-      }
-    }
-  })
-  .state('profile.thanks', {
-    url: '/thanks',
-    resolve: {
-      thanks: ['user', function(user) {
-        return user.thanks().$promise;
-      }]
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/profile/thanks.tpl.html',
-        controller: 'ProfileThanksCtrl'
-      }
-    }
-  })
   .state('editProfile', {
     url: '/edit-profile',
     parent: 'main',

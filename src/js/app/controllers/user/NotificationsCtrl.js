@@ -1,6 +1,6 @@
 var truncate = require('html-truncate');
 
-var controller = function($scope, currentUser, Activity, activity, Comment, $analytics) {
+var controller = function($scope, currentUser, Activity, activity, $analytics) {
 
   $scope.activity = activity;
 
@@ -31,26 +31,12 @@ var controller = function($scope, currentUser, Activity, activity, Comment, $ana
     };
   };
 
-  $scope.isThanked = function(comment) {
-    return comment && comment.thanks && comment.thanks[0];
-  };
-
   $scope.hasBodyText = function(event) {
     if (_.contains(['followAdd', 'follow', 'unfollow'], event.action))
       return false;
 
     return !!(event.comment.comment_text || event.post.description);
   }
-
-  $scope.thank = function(comment) {
-    if (_.isEmpty(comment.thanks)) {
-      $analytics.eventTrack('Notifications: Thank');
-      comment.thanks.push({});
-    } else {
-      comment.thanks.pop();
-    }
-    Comment.thank({id: comment.id});
-  };
 
   $scope.markAllRead = function() {
     $analytics.eventTrack('Notifications: Mark all as read');

@@ -1,7 +1,5 @@
 var path = require('path'),
-  qs = require('querystring'),
-  isiOSApp = require('./isIOSApp'),
-  connectToBridge = require('./webViewJavascriptBridge')
+  qs = require('querystring')
 
 // order matters, except for CONVERT, which toggles the crop UI
 var services = [
@@ -66,24 +64,14 @@ module.exports = function (opts) {
 
   filepicker.setKey(hyloEnv.filepicker.key)
 
-  if (typeof AndroidBridge !== 'undefined') {
-    var resp = AndroidBridge.filepickerUpload(opts)
-    resp === '' ? opts.failure('Cancelled') : convertAndStore(JSON.parse(resp))
-  } else if (isiOSApp()) {
-    var payload = JSON.stringify({message: 'filepickerUpload', options: opts})
-
-    connectToBridge(bridge => bridge.send(payload, resp => (resp === '' ? opts.failure('Cancelled') : convertAndStore(JSON.parse(resp)))))
-
-  } else {
-    filepicker.pick(
-      {
-        mimetype: 'image/*',
-        multple: false,
-        services: services
-      },
-      convertAndStore,
-      opts.failure
-    )
-  }
+  filepicker.pick(
+    {
+      mimetype: 'image/*',
+      multple: false,
+      services: services
+    },
+    convertAndStore,
+    opts.failure
+  )
 
 }

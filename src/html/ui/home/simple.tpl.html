@@ -1,14 +1,28 @@
-<div class="nav-title">Welcome to Hylo!</div>
+<div class="nav-title">Welcome to Communal!</div>
+
+    <h2>Communities</h2>
+    <div class="section communities">
+      <div class="community" ng-repeat="membership in currentUser.memberships track by $index">
+        <div class="main-column">
+          <label><a ui-sref="community.tools({community: membership.community.slug})">{{membership.community.name}}</a></label>
+          <div class="summary">Joined: {{membership.created_at | date:'longDate'}}</div>
+        </div>
+        <div class="side-column"><a ng-click="leaveCommunity(membership.community_id, $index)">Leave</a></div>
+      </div>
+    </div>
+    <div class="section">
+      <div ng-show="!currentUser.memberships.length">
+        <div class="setting-item">
+          <div class="full-column">
+            <p>You do not belong to any communities yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<h2>Create a new community</h2>
+<a class="button" ui-sref="createCommunity">Get started</a>
 
 <h2>Join a community</h2>
-
 <ng-include src="'/ui/shared/join-community.tpl.html'"></ng-include>
 
-<div ng-show="projects.length > 0">
-  <h2>Projects</h2>
-  <ng-include src="'/ui/home/projects.tpl.html'"></ng-include>
-</div>
-
-<h2>Create your own community</h2>
-
-<a class="button" ui-sref="createCommunity">Get started</a>

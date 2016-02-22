@@ -1,0 +1,9 @@
+<div ng-repeat="tool in tools | orderBy:'name'" class="tool-list-item">
+  <div class="avatar" back-img="::tool.tool.avatar_url"></div>
+  <div class="tool-info">
+    <p class="name">{{::tool.tool.name}}</p>
+    <p>{{::tool.tool.description}}</p>
+    <button type="button" ng-click="launchTool(tool)">Launch Tool</button>
+    <button type="button" ng-click="requestAccessToTool(tool.tool.id)">Request Access from Admin</button>
+  </div>
+</div>

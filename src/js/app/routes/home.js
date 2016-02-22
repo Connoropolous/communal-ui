@@ -22,9 +22,7 @@ module.exports = function ($stateProvider) {
   .state('home.simple', /*@ngInject*/ {
     url: '/h/starting-out',
     resolve: {
-      projects: function(currentUser, requireLogin) {
-        return currentUser.projects().$promise;
-      }
+
     },
     data: {
       showTabs: false
@@ -32,100 +30,24 @@ module.exports = function ($stateProvider) {
     views: {
       tab: {
         templateUrl: '/ui/home/simple.tpl.html',
-        controller: function($scope, projects, currentUser, $http) {
+        controller: function($scope, currentUser, $dialog, joinCommunity, Community) {
           'ngInject';
-          $scope.projects = projects;
 
-          $scope.submit = function(form) {
-            form.submitted = true;
-            if (form.$invalid) return;
+          $scope.currentUser = currentUser;
 
-            $http({
-              method: 'POST',
-              url: '/noo/waitlist',
-              data: {
-                name: currentUser.name,
-                email: currentUser.email,
-                details: $scope.details
-              }
-            }).success(function() {
-              $scope.success = "Thank you for contacting us! We'll get back to you soon.";
-            });
-          };
+          $scope.leaveCommunity = function (communityId, index) {
+            $dialog.confirm({
+              message: 'Are you sure you want to leave this community?'
+            }).then(function () {
+              Community.leave({id: communityId}, function () {
+                user.memberships.splice(index, 1)
+              })
+            })
+           }
 
+           $scope.joinCommunity = joinCommunity
         }
       }
     }
   })
-  .state('home.myPosts', {
-    url: '/h/my-posts',
-    resolve: /*@ngInject*/{
-      firstPostQuery: function(UserCache, currentUser, requireLogin) {
-        return UserCache.posts.fetch(currentUser.id);
-      },
-      user: function(currentUser) {
-        return currentUser;
-      },
-      isSelf: function() { return true }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/home/my-posts.tpl.html',
-        controller: 'PostListCtrl'
-      }
-    }
-  })
-  .state('home.following', {
-    url: '/h/following',
-    resolve: /*@ngInject*/{
-      firstPostQuery: function (UserCache, currentUser, requireLogin) {
-        return UserCache.followedPosts.fetch(currentUser);
-      }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/home/following-posts.tpl.html',
-        controller: 'FollowedPostsCtrl'
-      }
-    }
-  })
-  .state('home.allPosts', /*@ngInject*/ {
-    url: '/h/all-posts',
-    onEnter: function (currentUser, $state, $timeout) {
-      var memberships = currentUser && currentUser.memberships
-      $timeout(function () {
-        if (!memberships || memberships.length === 0) {
-          $state.go('home.simple')
-        }
-      })
-    },
-    resolve: {
-      firstPostQuery: function (UserCache, currentUser, requireLogin) {
-        return UserCache.allPosts.fetch(currentUser)
-      }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/home/all-posts.tpl.html',
-        controller: 'AllPostsCtrl'
-      }
-    }
-  })
-  .state('home.projects', /*@ngInject*/ {
-    url: '/h/my-projects',
-    resolve: {
-      projects: function(currentUser, requireLogin) {
-        return currentUser.projects().$promise;
-      }
-    },
-    views: {
-      tab: {
-        templateUrl: '/ui/home/projects.tpl.html',
-        controller: function($scope, projects) {
-          $scope.projects = projects;
-        }
-      }
-    }
-  });
-
 };

@@ -1,7 +1,4 @@
 <nav class="navbar navbar-default" role="navigation">
-  <div class="navbar-header">
-    <i class="icon-hylo-script" ng-click="close()"></i>
-  </div>
   <div class="navbar-center" href="#">COMMUNITY SETTINGS</div>
   <a class="navbar-right close" ng-click="close()">&times;</a>
 </nav>
@@ -31,10 +28,10 @@
 
       <div class="setting-item description">
         <div class="full-column">
-          <label>Core Intention / About</label>
+          <label>About</label>
         </div>
         <div class="full-column value" ng-hide="editing.description">
-          <div ng-bind-html="community.description | markdown"></div>
+          <div ng-bind-html="community.description || '[not set yet]' | markdown"></div>
           <button type="button" ng-click="edit('description')">Change</button>
         </div>
         <div class="full-column edit" ng-show="editing.description">
@@ -56,20 +53,6 @@
             <span ng-hide="editing.avatar_url">Change</span>
             <span ng-show="editing.avatar_url">Please wait...</span>
           </button>
-        </div>
-      </div>
-
-      <div class="setting-item">
-        <div class="full-column">
-          <label>Banner</label>
-          <p class="help">This image appears at the top of your community page. (Suggested size: 1400x500 pixels.)</p>
-          <div class="community-banner" back-img="community.banner_url"></div>
-          <div class="right">
-            <button type="button" ng-click="changeBanner()">
-              <span ng-hide="editing.banner_url">Change</span>
-              <span ng-show="editing.banner_url">Please wait...</span>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -103,20 +86,60 @@
         </div>
       </div>
 
-      <div class="setting-item">
-        <div class="half-column">
-          <label>Location</label>
-          <p ng-if="community.location">{{community.location}}</p>
-          <p ng-if="!community.location">You haven't specified a location yet.</p>
+    </div>
+
+    <div class="section-label" ng-click="expand4 = !expand4">
+      Tools
+      <i ng-class="{'icon-down': expand4, 'icon-right': !expand4}"></i>
+    </div>
+    <div class="section tools" collapse="!expand4">
+      <div ng-repeat="tool in tools track by $index | orderBy:'tool.tool.name'" class="setting-item">
+        <div class="main-column">
+          <div class="avatar" back-img="::tool.tool.avatar_url"></div>
+          <label>{{ tool.tool.name }}</label>
+          <p class="help">{{ tool.tool.description }}</p>
+          <a href="{{ toolDisplayUrl(tool) }}" target="_blank">{{ toolDisplayUrl(tool) }}</a>
         </div>
-        <div class="half-column value" ng-hide="editing.location">
-          <button type="button" ng-click="edit('location')">Change</button>
+        <div class="side-column value">
+          <a class="close" ng-click="removeTool($index)">&times;</a>
         </div>
-        <div class="half-column edit" ng-show="editing.location">
-          <input type="text" class="form-control" ng-model="edited.location"/>
-          <button type="button" ng-click="cancelEdit('location')">Cancel</button>
-          <button type="button" ng-click="saveEdit('location')">Save</button>
+        <div class="side-column value" ng-hide="editing.tools[$index]">
+          <button type="button" ng-click="editTool($index)">Change</button>
         </div>
+        <div class="side-column edit" ng-show="editing.tools[$index]">
+          <form name="form">
+            <input name="slug" type="text" class="form-control" ng-model="edited.tools[$index].slug" required />
+          </form>
+          <p class="help error" ng-if="form.slug.$error.required">Please add an identifier for your community on this tool.</p>
+          <button type="button" ng-click="cancelToolEdit($index)">Cancel</button>
+          <button type="button" ng-click="saveToolEdit($index)">Save</button>
+        </div>
+      </div>
+
+      <label>Add <span ng-hide="!tools.length">Other</span> Tools Which Your Community Uses</label>
+      <div ng-repeat="tool in availableTools track by $index | orderBy:'tool.name'" class="setting-item">
+        <div class="main-column">
+          <div class="avatar" back-img="::tool.avatar_url"></div>
+          <label>{{ tool.name }}</label>
+          <p class="help">{{ tool.description }}</p>
+        </div>
+        <div class="side-column value" ng-hide="editing.addTools[$index]">
+          <button type="button" ng-click="startAddTool($index)">Add</button>
+        </div>
+        <div class="main-column edit" ng-show="editing.addTools[$index]">
+          <form name="form">
+            <div class="input-group">
+              <span class="input-group-addon">{{ removeSlug(tool.url) }}</span>
+              <input name="slug" type="text" ng-model="edited.addTools[$index].slug" class="form-control tool-slug" force-lowercase="" required />
+            </div>
+          </form>
+          <p class="help error" ng-if="form.slug.$error.required">Please add an identifier for your community on this tool.</p>
+          <button type="button" ng-click="cancelAddTool($index)">Cancel</button>
+          <button type="button" ng-click="finishAddTool($index)">Save</button>
+        </div>
+      </div>
+      <div ng-hide="availableTools.length">
+        Your community is currently using all of the tools registered with Communal.
       </div>
 
     </div>
@@ -172,15 +195,13 @@ to pre-populate the invite code for new members to easily join.</p>
     <div class="section moderators" collapse="!expand3">
       <div class="setting-item">
         <div class="full-column">
-          <p>
-            Moderators can
-            <span ng-hide="community.settings.all_can_invite">invite new members and</span>
-            edit or delete other members' posts.
+          <p ng-hide="community.settings.all_can_invite">
+            Moderators can invite new members.
           </p>
 
           <div class="moderator" ng-repeat="user in moderators">
-            <a class="avatar" back-img="user.avatar_url" ui-sref="profile.posts({id: user.id})"></a>
-            <a class="name" ui-sref="profile.posts({id: user.id})" ng-bind="::user.name"></a>
+            <a class="avatar" back-img="user.avatar_url" ui-sref="profile.about({id: user.id})"></a>
+            <a class="name" ui-sref="profile.about({id: user.id})" ng-bind="::user.name"></a>
             <a class="close" ng-click="removeModerator(user.id)">&times;</a>
           </div>
 
@@ -195,47 +216,5 @@ to pre-populate the invite code for new members to easily join.</p>
       </div>
     </div>
 
-    <div class="section-label" ng-click="expand4 = !expand4">
-      Email
-      <i ng-class="{'icon-down': expand4, 'icon-right': !expand4}"></i>
-    </div>
-    <div class="section access" collapse="!expand4">
-
-      <div class="setting-item">
-        <div class="main-column">
-          <label>Send a weekly email inviting members to post?</label>
-          <p class="help">If this is checked, each week members will receive an email that they can reply to with their offers, requests and intentions.</p>
-        </div>
-        <div class="side-column value">
-          <input type="checkbox" ng-model="community.settings.sends_email_prompts" ng-click="saveSetting('sends_email_prompts')"/>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="section-label" ng-click="expand5 = !expand5">
-      Send Updates to Slack
-      <i ng-class="{'icon-down': expand5, 'icon-right': !expand5}"></i>
-    </div>
-    <div class="section slack" collapse="!expand5">
-      <div class="setting-item">
-        <div class="full-column">
-          <div class="add-to-slack" ng-hide="community.slack_hook || slack_remove_transition">
-            <p>Connect this community to a <a href="https://slack.com" target="_blank">Slack</a> team and Hylo will notify a channel when there are new posts.</p>
-            <a href="https://slack.com/oauth/authorize?scope=incoming-webhook&client_id=15397411765.20785715792&redirect_uri={{add_slack_url}}"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"></a>
-          </div>
-
-          <div ng-hide="!community.slack_hook || slack_remove_transition">
-            <p>This community is connected to the <span class="slack_team">{{ community.slack_team }}</span> team on Slack.</p>
-            <button type="button" ng-click="removeSlackhook()">Remove</button>
-          </div>
-
-          <div ng-hide="!slack_remove_transition">
-            <p>Ok. Your integration has been removed from Hylo, but be sure to also remove it on Slack.</p>
-            <button type="button" ng-click="removeFromSlack()">Remove from Slack</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

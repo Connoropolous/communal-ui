@@ -1,8 +1,13 @@
 <div class="banner">
   <div class="background">
-    <div back-img="::community.banner_url"></div>
+    <!--<div back-img="::community.banner_url"></div>-->
+    <div style="background-image: url('https://d3ngex8q79bk55.cloudfront.net/misc/default_community_banner.jpg');"></div>
   </div>
   <div class="buttons">
+    <a class="invite" ui-sref="community.settings({community: community.slug, tools: 1})" ng-if="canModerate">
+      <i class="icon-add-01"></i>
+      Manage Tools
+    </a>
     <a class="invite" ui-sref="community.invite({community: community.slug})" ng-if="canInvite">
       <i class="icon-add-01"></i>
       Invite Members
@@ -13,7 +18,9 @@
     </a>
   </div>
   <div class="titles">
-    <div class="logo" back-img="::community.avatar_url"></div>
+    <!--<div class="logo" back-img="::community.avatar_url"></div>-->
+
+    <div class="logo" style="background-image: url('http://static.tumblr.com/5c90a92aa8597626a00a0845eea82ca3/e5nd402/pEdn4g1vc/tumblr_static_kvycde7padscokkwgs8k88oc.png');"></div>
     <div class="name">{{::community.name}}</div>
     <div class="network" ng-if="::community.network">
       Part of
@@ -22,16 +29,8 @@
   </div>
 
     <div class="tabs">
-      <a ui-sref="community.posts" ng-class="{selected: $state.current.name === 'community.posts'}">
-        POSTS
-        <div class="triangle"></div>
-      </a><!--
-      --><a ui-sref="community.events" ng-class="{selected: $state.current.name === 'community.events'}">
-        EVENTS
-        <div class="triangle"></div>
-      </a><!--
-      --><a ui-sref="community.projects" ng-class="{selected: $state.current.name === 'community.projects'}">
-        PROJECTS
+      <a ui-sref="community.tools" ng-class="{selected: $state.current.name === 'community.tools'}">
+        TOOLS
         <div class="triangle"></div>
       </a><!--
       --><a ui-sref="community.members" ng-class="{selected: $state.current.name === 'community.members'}">

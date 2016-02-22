@@ -3,12 +3,11 @@ module.exports = function (angularModule) {
   // instead just export the factory function
   // as in the second section below
   require('./services/Community')(angularModule)
+  require('./services/Tool')(angularModule)
+  require('./services/UseOfTool')(angularModule)
   require('./services/Activity')(angularModule)
-  require('./services/Comment')(angularModule)
   require('./services/Search')(angularModule)
-  require('./services/Post')(angularModule)
   require('./services/Invitation')(angularModule)
-  require('./services/Project')(angularModule)
   require('./services/Network')(angularModule)
   require('./services/bodyClass')(angularModule)
   require('./services/onboarding')(angularModule)
@@ -28,6 +27,5 @@ module.exports = function (angularModule) {
   .factory('CurrentUser', require('./services/CurrentUser'))
   .factory('User', require('./services/User'))
   .factory('UserMentions', require('./services/UserMentions'))
-  .factory('PostManager', require('./services/PostManager'))
   .factory('ModalLoginSignup', require('./services/ModalLoginSignup'))
 }
