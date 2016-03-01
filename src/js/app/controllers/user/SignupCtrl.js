@@ -1,10 +1,8 @@
-var handleError = function (err, $scope, $analytics) {
+var handleError = function (err, $scope) {
   var msg = err.data
   var email = $scope.user.email
   if (!msg) {
     $scope.signupError = "Couldn't sign up. Please try again."
-    Rollbar.error('Signup failure', {email: $scope.user.email})
-    $analytics.eventTrack('Signup failure', {email: email, cause: 'unknown'})
     return
   }
 
@@ -14,16 +12,13 @@ var handleError = function (err, $scope, $analytics) {
     var value = match[2]
 
     $scope.signupError = format('The %s "%s" is already in use. Try logging in instead?', key, value)
-    $analytics.eventTrack('Signup failure', {email: email, cause: 'duplicate ' + key})
   } else {
     $scope.signupError = msg
-    $analytics.eventTrack('Signup failure', {email: email, cause: msg})
   }
 }
 
-module.exports = function ($scope, $analytics, User, Community, ThirdPartyAuth, Invitation, context, projectInvitation, $stateParams, $state) {
+module.exports = function ($scope, User, Community, ThirdPartyAuth, Invitation, context, projectInvitation, $stateParams, $state) {
   'ngInject'
-  $analytics.eventTrack('Signup start')
   $scope.user = {}
 
   if ($state.current.name === 'signupWithCode') {
@@ -35,7 +30,6 @@ module.exports = function ($scope, $analytics, User, Community, ThirdPartyAuth, 
   $scope.invitation = Invitation.storedData() || projectInvitation
 
   var finishSignup = provider => {
-    $analytics.eventTrack('Signup success', {provider: provider})
     if ($stateParams.next) {
       window.history.pushState(null, null, $stateParams.next)
     } else if (context === 'modal') {
@@ -55,7 +49,7 @@ module.exports = function ($scope, $analytics, User, Community, ThirdPartyAuth, 
     User.signup(params).$promise.then(function (user) {
       finishSignup('password')
     }, function (err) {
-      handleError(err, $scope, $analytics)
+      handleError(err, $scope)
     })
   }
 
@@ -69,7 +63,7 @@ module.exports = function ($scope, $analytics, User, Community, ThirdPartyAuth, 
     $scope.$apply(function () {
       $scope.authDialog.close()
       if (error) {
-        handleError({data: error}, $scope, $analytics)
+        handleError({data: error}, $scope)
       } else {
         finishSignup($scope.serviceUsed)
       }

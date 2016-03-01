@@ -1,4 +1,4 @@
-module.exports = function ($scope, growl, $stateParams, $analytics, currentUser, $history, $dialog) {
+module.exports = function ($scope, growl, $stateParams, currentUser, $history, $dialog) {
   'ngInject'
   var user = $scope.user = currentUser
   var editing = $scope.editing = {}
@@ -41,7 +41,6 @@ module.exports = function ($scope, growl, $stateParams, $analytics, currentUser,
 
     user.update(data, function () {
       user[field] = edited[field]
-      $analytics.eventTrack('User Settings: Changed ' + field, {user_id: user.id})
       growl.addSuccessMessage('Saved change.')
     }, function (err) {
       growl.addErrorMessage(err.data)

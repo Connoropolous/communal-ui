@@ -1,4 +1,4 @@
-var controller = function($scope, $analytics, community, currentUser, extraProperties, $history, $location) {
+var controller = function($scope, community, currentUser, extraProperties, $history, $location) {
   $scope.community = community
   $scope.canModerate = currentUser && currentUser.canModerate(community);
 
@@ -23,13 +23,11 @@ var controller = function($scope, $analytics, community, currentUser, extraPrope
       moderator: $scope.inviteAsModerator
     })
     .$promise.then(function(resp) {
-      $analytics.eventTrack('Invite Members', {email_addresses: $scope.emails, to_moderate: $scope.inviteAsModerator});
       $scope.inviteResults = resp.results;
       $scope.emails = '';
       $scope.submitting = false;
     }, function() {
       alert('Something went wrong. Please check the emails you entered for typos.');
-      $analytics.eventTrack('Inviting Members Failed', {email_addresses: $scope.emails});
       $scope.submitting = false;
     });
   };
@@ -51,11 +49,6 @@ var controller = function($scope, $analytics, community, currentUser, extraPrope
   $scope.saveEdit = function () {
     community.update(community, function() {
       $scope.join_url = origin + '/c/' + community.slug + '/join/' + community.beta_access_code
-      $analytics.eventTrack('Community: Changed Setting', {
-        name: 'beta_access_code',
-        community_id: community.slug,
-        moderator_id: currentUser.id
-      })
     })
     $scope.editing = false
   }

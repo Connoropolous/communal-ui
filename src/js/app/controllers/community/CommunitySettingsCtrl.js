@@ -1,6 +1,6 @@
 var filepickerUpload = require('../../services/filepickerUpload');
 
-var controller = function ($scope, $history, $analytics, community, currentUser, growl, tools, extraProperties, User, UseOfTool, $location) {
+var controller = function ($scope, $history, community, currentUser, growl, tools, extraProperties, User, UseOfTool, $location) {
 
   _.merge(community, extraProperties);
   var origin = $location.absUrl().replace($location.path(), '');
@@ -80,11 +80,6 @@ var controller = function ($scope, $history, $analytics, community, currentUser,
         community[field2] = $scope.edited[field2];
       }
       $scope.join_url = origin + '/c/' + community.slug + '/join/' + community.beta_access_code;
-      $analytics.eventTrack('Community: Changed Setting', {
-        name: field,
-        community_id: community.slug,
-        moderator_id: currentUser.id
-      });
     });
   };
 
@@ -100,10 +95,6 @@ var controller = function ($scope, $history, $analytics, community, currentUser,
           community.update(data, function() {
             community[opts.fieldName] = url;
             $scope.editing[opts.fieldName] = false;
-            $analytics.eventTrack('Community: Changed ' + opts.humanName, {
-              community_id: community.slug,
-              moderator_id: currentUser.id
-            });
           });
         },
         failure: function(error) {
@@ -132,11 +123,6 @@ var controller = function ($scope, $history, $analytics, community, currentUser,
 
   $scope.saveSetting = function(name) {
     community.update({settings: community.settings}, function() {
-      $analytics.eventTrack('Community: Changed Setting', {
-        name: name,
-        community_id: community.slug,
-        moderator_id: currentUser.id
-      });
       growl.addSuccessMessage('Changes were saved.');
     });
   };
@@ -162,7 +148,6 @@ var controller = function ($scope, $history, $analytics, community, currentUser,
     $scope.selectedMember = null;
     community.addModerator({userId: item.id}, function() {
       $scope.moderators.push(item);
-      $analytics.eventTrack('Make Moderator', {user_id: item.id, user_name: item.name});
     })
   };
 

@@ -1,10 +1,9 @@
 var truncate = require('html-truncate');
 
-var controller = function($scope, currentUser, Activity, activity, $analytics) {
+var controller = function($scope, currentUser, Activity, activity) {
 
   $scope.activity = activity;
 
-  $analytics.eventTrack('Notifications: View');
   currentUser.update({new_notification_count: 0}, function() {
     currentUser.new_notification_count = 0;
   });
@@ -39,7 +38,6 @@ var controller = function($scope, currentUser, Activity, activity, $analytics) {
   }
 
   $scope.markAllRead = function() {
-    $analytics.eventTrack('Notifications: Mark all as read');
     Activity.markAllRead();
     currentUser.notification_count = 0;
     _.each($scope.activity, function(event) {
@@ -48,7 +46,6 @@ var controller = function($scope, currentUser, Activity, activity, $analytics) {
   };
 
   $scope.visit = function(event) {
-    $analytics.eventTrack('Notifications: Clickthrough');
     if (event.unread) {
       Activity.save({id: event.id}, {unread: false});
       event.unread = false;

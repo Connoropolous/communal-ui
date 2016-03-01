@@ -1,7 +1,7 @@
 var highlight = require('em-highlight'),
   pageSize = 5;
 
-var controller = function($scope, $history, $analytics, growl, Search, searchCommunity, initialQuery) {
+var controller = function($scope, $history, growl, Search, searchCommunity, initialQuery) {
   $scope.query = initialQuery || '';
   $scope.searching = true;
   $scope.results = {
@@ -16,7 +16,6 @@ var controller = function($scope, $history, $analytics, growl, Search, searchCom
   var fetch = _.debounce(function() {
     if ($scope.query.length <= 2) return;
 
-    $analytics.eventTrack('Search', {query: $scope.query});
     $scope.searching = true;
 
     Search.get({

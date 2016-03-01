@@ -1,6 +1,6 @@
 var filepickerUpload = require('../../services/filepickerUpload')
 
-module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $rootScope) {
+module.exports = function ($scope, currentUser, growl, onboarding, $rootScope) {
   'ngInject'
   var user = $scope.user = currentUser
   var editData = $scope.editData = _.pick(user, [
@@ -36,17 +36,12 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
 
     var saveData = _.clone(editData)
 
-    if (saveData.bio !== bio) $analytics.eventTrack('My Profile: Updated Bio')
-
     if (!edited.skills) delete saveData.skills
-    else $analytics.eventTrack('My Profile: Updated Skills')
 
     if (!edited.organizations) delete saveData.organizations
-    else $analytics.eventTrack('My Profile: Updated Affiliations')
 
     user.update(saveData, function () {
       _.extend(user, saveData)
-      $analytics.eventTrack('My Profile: Saved Changes')
 
       if (onboarding && onboarding.currentStep() === 'profile') {
         onboarding.goNext()
@@ -68,7 +63,6 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
 
       $scope.multiInput[name] = null
       edited[type] = true
-      $analytics.eventTrack('My Profile: Edit: Add to Profile', {item_type: type})
     }
     return true
   }
@@ -86,14 +80,12 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
         success: function (url) {
           $scope.$apply(function () {
             editData[opts.fieldName] = url
-            $analytics.eventTrack('Profile: Changed ' + opts.humanName, {user_id: user.id})
           })
         },
         failure: function (error) {
           if (error.code !== 101) {
             $scope.$apply(function () {
               growl.addErrorMessage('An error occurred while uploading the image. Please try again.')
-              $analytics.eventTrack('Profile: Failed to Change ' + opts.humanName, {user_id: user.id})
             })
           }
         }
@@ -123,16 +115,12 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
 
     editData.twitter_name = response
 
-    if (response) {
-      $analytics.eventTrack('My Profile: Edit: Add Social Media Link to Profile', {provider: 'Twitter'})
-    }
   }
 
   $scope.changeFacebook = function () {
     if (editData.facebook_url) {
       if (window.confirm('Choose OK to remove your Facebook information.')) {
         editData.facebook_url = null
-        $analytics.eventTrack('My Profile: Edit: Remove Social Media Link from Profile', {provider: 'Facebook'})
       }
     } else {
       window.FB.login(function () {
@@ -140,7 +128,6 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
           // TODO store linked account
           $scope.$apply(function () {
             editData.facebook_url = resp.link
-            $analytics.eventTrack('My Profile: Edit: Add Social Media Link to Profile', {provider: 'Facebook'})
           })
         })
       })
@@ -151,7 +138,6 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
     if (editData.linkedin_url) {
       if (window.confirm('Choose OK to remove your LinkedIn information.')) {
         editData.linkedin_url = null
-        $analytics.eventTrack('My Profile: Edit: Remove Social Media Link from Profile', {provider: 'LinkedIn'})
       }
     } else {
       var left = document.documentElement.clientWidth / 2 - 200
@@ -164,7 +150,6 @@ module.exports = function ($scope, $analytics, currentUser, growl, onboarding, $
     $scope.$apply(function () {
       editData.linkedin_url = url
       $scope.linkedinDialog.close()
-      $analytics.eventTrack('My Profile: Edit: Add Social Media Link to Profile', {provider: 'LinkedIn'})
     })
   }
 }

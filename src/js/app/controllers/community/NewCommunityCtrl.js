@@ -1,6 +1,6 @@
 var filepickerUpload = require('../../services/filepickerUpload');
 
-var controller = function ($scope, $timeout, $analytics, $history, Community, growl, currentUser) {
+var controller = function ($scope, $timeout, $history, Community, growl, currentUser) {
 
   $scope.uploading = {};
 
@@ -19,10 +19,6 @@ var controller = function ($scope, $timeout, $analytics, $history, Community, gr
           $scope.uploading[opts.fieldName] = false;
           community[opts.fieldName] = url;
           $scope.$apply();
-          $analytics.eventTrack('Create Community: Uploaded ' + opts.humanName, {
-            community_id: community.slug,
-            moderator_id: currentUser.id
-          });
         },
         failure: function(error) {
           $scope.uploading[opts.fieldName] = false;
@@ -30,10 +26,6 @@ var controller = function ($scope, $timeout, $analytics, $history, Community, gr
           if (error.code == 101) return;
 
           growl.addErrorMessage('An error occurred while uploading the image. Please try again.');
-          $analytics.eventTrack('Create Community: Failed to Upload ' + opts.humanName, {
-            community_id: community.slug,
-            moderator_id: currentUser.id
-          });
         }
       });
     };
@@ -65,7 +57,6 @@ var controller = function ($scope, $timeout, $analytics, $history, Community, gr
 
     $scope.saving = true;
     Community.save(community, function (membership) {
-      $analytics.eventTrack('Create Community: Finished', {community_id: community.slug});
       currentUser.memberships = [membership].concat(currentUser.memberships);
       $scope.saving = false;
       $scope.$state.go("community.settings", {community: community.slug, tools: 1, new: 1});

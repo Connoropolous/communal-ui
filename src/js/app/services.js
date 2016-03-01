@@ -11,7 +11,6 @@ module.exports = function (angularModule) {
   require('./services/Network')(angularModule)
   require('./services/bodyClass')(angularModule)
   require('./services/onboarding')(angularModule)
-  require('./services/clickthroughTracker')(angularModule)
   require('./services/history')(angularModule)
   require('./services/dialog')(angularModule)
   require('./services/Cache')(angularModule)

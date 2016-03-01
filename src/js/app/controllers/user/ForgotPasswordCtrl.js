@@ -1,5 +1,4 @@
-var controller = function($scope, $analytics, User, context) {
-  $analytics.eventTrack('Password reset start');
+var controller = function($scope, User, context) {
 
   $scope.submit = function(form) {
     form.submitted = true;
@@ -8,10 +7,8 @@ var controller = function($scope, $analytics, User, context) {
 
     User.requestPasswordChange({email: $scope.email}, function(resp) {
       if (!resp.error) {
-        $analytics.eventTrack('Password reset success', {email: $scope.email});
         $scope.success = "Please click the link in the email that we just sent you.";
       } else if (resp.error === 'no user') {
-        $analytics.eventTrack('Password reset failure', {email: $scope.email});
         $scope.error = 'The email address you entered was not recognized.';
       }
     });
