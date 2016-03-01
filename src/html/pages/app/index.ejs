@@ -5,21 +5,14 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="fragment" content="!">
-<meta property="og:url" content="https://www.hylo.com">
-<meta property="og:title" content="Hylo">
-<meta property="og:description" content="A network for sharing resources within and across purpose-driven communities.">
 
 <base href="/">
-<%- environment == 'development' ? '' : include('../_newrelic') %>
 <%- include('../_clientEnv') %>
-<%- include('../_rollbar') %>
-<%- include('../_segment') %>
 <%- include('../_favicon') %>
-<%- include('../_twitter') %>
 <script type="text/javascript" src="//use.typekit.net/npw4ouq.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 <link href="<%= assetUrl('bundle.css') %>" rel="stylesheet">
-<title>Hylo</title>
+<title>Communal</title>
 </head>
 
 <body ng-class="$bodyClass()">

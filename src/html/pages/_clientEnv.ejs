@@ -9,15 +9,11 @@
       bucket: '<%= process.env.AWS_S3_BUCKET %>',
       cloudfrontHost: '<%= process.env.AWS_S3_CONTENT_URL %>'
     },
-    fb: {appId: '<%= process.env.FACEBOOK_APP_ID %>'},
-    rollbar: {token: '<%= process.env.ROLLBAR_CLIENT_TOKEN %>'},
-    segment: {key: '<%= process.env.SEGMENT_KEY %>'},
     filepicker: {key: '<%= process.env.FILEPICKER_API_KEY %>'},
     google: {
       clientId: '<%= process.env.GOOGLE_CLIENT_ID %>',
       key: '<%= process.env.GOOGLE_BROWSER_KEY %>'
     },
-    branch: {key: '<%= process.env.BRANCH_API_KEY %>'},
     onUser: function(fn) {
       hyloEnv.onUserCallbacks.push(fn);
     },

@@ -1,4 +1,3 @@
-var branch = require('branch-sdk')
 
 require('./directives')
 require('./controllers')
@@ -6,13 +5,10 @@ require('./controllers')
 var dependencies = [
   'afkl.lazyImage',
   'angular-growl',
-  'angulartics',
-  'angulartics.segment.io',
   'hyloControllers',
   'hyloDirectives',
   'infinite-scroll',
   'mentio',
-  'newrelic-timing',
   'ngAnimate',
   'ngResource',
   'ngSanitize',
@@ -46,10 +42,6 @@ app.run(function ($anchorScroll) {
   $anchorScroll()
 })
 
-app.run(function (clickthroughTracker) {
-  clickthroughTracker.track(window.location)
-})
-
 app.run(function ($rootScope, $state, growl, $bodyClass, CurrentUser) {
   $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
     if (error && _.include([401, 403], error.status)) {
@@ -77,27 +69,7 @@ app.run(function ($rootScope, $state, growl, $bodyClass, CurrentUser) {
   $rootScope.$bodyClass = $bodyClass
 
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams, error) {
-  
+   
   })
-
-  $rootScope.$on('$viewContentLoaded', function () {
-    if (window.hyloEnv.branch.key) {
-      try {
-        branch.init(window.hyloEnv.branch.key)
-        branch.banner(
-          {
-            icon: '/img/appicon.png',
-            title: 'Hylo App',
-            description: 'The Hylo App!',
-            forgetHide: 10,
-            mobileSticky: true,
-            showDesktop: false
-          },
-          {}
-        )
-      } catch (e) {
-        Rollbar.error('Branch SDK error', e)
-      }
-    }
-  })
+ 
 })

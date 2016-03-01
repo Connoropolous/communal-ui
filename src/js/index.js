@@ -16,19 +16,15 @@ require('angular-touch');
 require('angular-ui-bootstrap-bower/ui-bootstrap');
 require('angular-ui-bootstrap-bower/ui-bootstrap-tpls');
 require('angular-ui-router');
-require('angulartics');
 require('bootstrap-ui-datetime-picker/dist/datetime-picker');
 require('gsap/src/uncompressed/TweenLite');
 require('gsap/src/uncompressed/plugins/CSSPlugin');
 // require('gsap/src/uncompressed/easing/EasePack');
 require('ment.io');
-require('newrelic-timing');
-require('newrelic-timing/newrelic-timing-angular');
 require('ng-tags-input');
 require('ngInfiniteScroll');
 
 // Manually-installed components
-require('./angular/angulartics-segmentio');
 
 require('./app/index');
 
