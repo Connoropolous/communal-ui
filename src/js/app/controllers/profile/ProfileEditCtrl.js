@@ -1,6 +1,6 @@
 var filepickerUpload = require('../../services/filepickerUpload')
 
-module.exports = function ($scope, currentUser, growl, onboarding, $rootScope) {
+module.exports = function ($scope, currentUser, growl, $rootScope) {
   'ngInject'
   var user = $scope.user = currentUser
   var editData = $scope.editData = _.pick(user, [
@@ -42,12 +42,7 @@ module.exports = function ($scope, currentUser, growl, onboarding, $rootScope) {
 
     user.update(saveData, function () {
       _.extend(user, saveData)
-
-      if (onboarding && onboarding.currentStep() === 'profile') {
-        onboarding.goNext()
-      } else {
-        $scope.cancel()
-      }
+      $scope.cancel()
     })
   }
 

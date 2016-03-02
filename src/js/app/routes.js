@@ -1,7 +1,6 @@
 var routes = function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise(function ($injector, $location) {
     var state = $injector.get('$state')
-    window.Rollbar.warning('404 Error: ' + $location.path())
     state.go('notFound')
     return $location.path()
   })
@@ -19,11 +18,6 @@ var routes = function ($stateProvider, $urlRouterProvider) {
     resolve: {
       currentUser: function (CurrentUser) {
         return CurrentUser.load()
-      },
-      onboarding: function (currentUser, Onboarding) {
-        var onboardingData = (currentUser && currentUser.onboarding)
-        if (!_.any(onboardingData)) return null
-        return new Onboarding(currentUser)
       }
     }
   })
@@ -34,18 +28,6 @@ var routes = function ($stateProvider, $urlRouterProvider) {
       main: {
         templateUrl: '/ui/user/settings.tpl.html',
         controller: 'UserSettingsCtrl'
-      }
-    }
-  })
-  .state('support', {
-    url: '/h/support',
-    parent: 'main',
-    views: {
-      main: {
-        templateUrl: '/ui/support/base.tpl.html',
-        controller: function ($anchorScroll) {
-          $anchorScroll()
-        }
       }
     }
   })
@@ -87,7 +69,6 @@ var routes = function ($stateProvider, $urlRouterProvider) {
   
   require('./routes/community')($stateProvider)
   require('./routes/profile')($stateProvider)
-  require('./routes/onboarding')($stateProvider)
   require('./routes/home')($stateProvider)
   require('./routes/network')($stateProvider)
   require('./routes/entrance')($stateProvider)

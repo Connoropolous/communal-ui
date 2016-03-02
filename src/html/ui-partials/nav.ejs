@@ -2,11 +2,7 @@
 <div id="nav" ng-class="{public: !currentUser}" ng-controller="NavCtrl">
 
   <div class="item public-only hylo-icon">
-    <a href="/" target="_self"><i class="icon-hylo-script"></i></a>
-  </div>
-
-  <div class="item public-only text-link">
-    <a href="/about" target="_self">About</a>
+    <a href="/" target="_self">Communal</a>
   </div>
 
   <div class="item home">
@@ -24,18 +20,13 @@
         <li><a ui-sref="profile.about({id: currentUser.id})">Profile</a></li>
         <li><a ui-sref="userSettings">Settings</a></li>
         <li><a href="/noo/logout" target="_self" class="logout">Log out</a></li>
-        <li role="presentation" class="divider"></li>
-        <li><a ui-sref="support">Help</a></li>
       </ul>
     </div>
 
     <div class="item public-only text-link">
       <a ui-sref="login">Log in</a>
     </div>
-
-    <div class="item public-only text-link">
-      <a ui-sref="signup">Sign up</a>
-    </div>
+    
   </div>
 
 </div>

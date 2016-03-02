@@ -1,7 +1,7 @@
 var filepickerUpload = require('../../services/filepickerUpload');
 
 var controller = function ($scope, $history, community, currentUser, growl, tools, extraProperties, User, UseOfTool, $location) {
-
+  console.log('testing');
   _.merge(community, extraProperties);
   var origin = $location.absUrl().replace($location.path(), '');
   $scope.join_url = origin + '/c/' + community.slug + '/join/' + community.beta_access_code;

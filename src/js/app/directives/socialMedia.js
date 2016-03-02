@@ -1,4 +1,4 @@
-var directive = function($analytics) {
+var directive = function() {
 
   var controller = function($scope, $element) {
     $scope.twitterUrl = function() {
@@ -9,13 +9,9 @@ var directive = function($analytics) {
       return $scope.user.twitter_name || $scope.user.linkedin_url || $scope.user.facebook_url;
     };
 
-    $scope.clickedSocialLink = function(network, url) {
-      $analytics.eventTrack('Clicked a Social Media link', {network: network, url: url, page: $scope.page});
-    };
+    $scope.clickedSocialLink = function(network, url) {};
 
-    $scope.trackEmail = function() {
-      $analytics.eventTrack('Clicked Email Button', {user_id: $scope.user.id, page: $scope.page});
-    };
+    $scope.trackEmail = function() {};
   };
 
   return {

@@ -2,7 +2,6 @@
 <%- include('_header'); %>
 
 <script type="text/javascript">
-  window.analytics.page(); // segment.io
   $.get('/noo/user/status', function(resp) {
     if (resp.signedIn) window.location = '/app';
   });

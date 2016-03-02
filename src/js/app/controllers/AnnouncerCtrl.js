@@ -1,4 +1,4 @@
-var controller = function($scope, $rootScope, Onboarding) {
+var controller = function($scope, $rootScope) {
 
   var onclick;
 

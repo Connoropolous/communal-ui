@@ -30,11 +30,13 @@ var handleError = function (err, $scope) {
 }
 
 var finishLogin = function ($scope, $stateParams, context) {
+  console.log('finishing login', $scope, $stateParams, context);
   if ($stateParams.next) {
     window.history.pushState(null, null, $stateParams.next)
   } else if (context === 'modal') {
     $scope.$close({action: 'finish'})
   } else {
+    console.log('doing this');
     $scope.$state.go('appEntry')
   }
 }

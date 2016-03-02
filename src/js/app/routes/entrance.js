@@ -4,15 +4,12 @@ module.exports = function($stateProvider) {
   .state('appEntry', /*@ngInject*/ {
     parent: 'main',
     url: '/app',
-    onEnter: function(currentUser, $state, $timeout, onboarding) {
+    onEnter: function(currentUser, $state, $timeout) {
+      console.log('test', currentUser);
       var membership = currentUser && currentUser.lastUsedMembership();
       $timeout(function() {
         if (membership) {
-          if (onboarding && onboarding.currentStep() == 'start') {
-            $state.go('onboarding.start');
-          } else {
-            $state.go('community.members', {community: membership.community.slug});
-          }
+          $state.go('community.members', {community: membership.community.slug});
         } else if (currentUser) {
           $state.go('home.simple');
         } else {
@@ -69,34 +66,6 @@ module.exports = function($stateProvider) {
       entrance: {
         templateUrl: '/ui/entrance/signup-with-code.tpl.html',
         controller: 'SignupCtrl'
-      }
-    }
-  })
-  .state('waitlist', {
-    url: '/waitlist',
-    parent: 'entrance',
-    views: {
-      entrance: {
-        templateUrl: '/ui/entrance/waitlist.tpl.html',
-        controller: function($scope, $http) {
-          'ngInject';
-
-          $scope.request = {};
-
-          $scope.submit = function(form) {
-            form.submitted = true;
-            if (form.$invalid) return;
-
-            $http({
-              method: 'POST',
-              url: '/noo/waitlist',
-              data: $scope.request
-            }).success(function() {
-              $scope.success = "Thank you for contacting us! We'll get back to you soon.";
-            });
-          };
-
-        }
       }
     }
   })

@@ -16,11 +16,6 @@ module.exports = function ($stateProvider) {
         } else {
           return User.get({id: $stateParams.id}).$promise;
         }
-      },
-      showModal: function(isSelf, onboarding) {
-        // hack -- this is only here so it shows before the controller's other content appears
-        if (isSelf && onboarding && onboarding.currentStep() === 'profile')
-          onboarding.showProfileModal();
       }
     },
     views: {
